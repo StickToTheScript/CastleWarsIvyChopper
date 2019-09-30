@@ -1,0 +1,322 @@
+program CWIvyChopper;
+
+{$DEFINE SMART8} //Remove the '8' if you wish to not use SMART 8.
+{$i SRL\SRL.simba}
+{$i sps/sps.simba}
+
+
+{*******************************************************************************
+
+     *Castle Wars Ivy Chopper*
+
+     *Verson: 1.2*
+
+     *Script Writer*: StickToTheScript*
+
+     *This is a Ivy Cutting script that runs on the South wall of Castle Wars.*
+     *You can freely let me know if there is anything you would like to see added*
+     *to the script. I will take note of it and see what I can do.*
+
+
+  ***** Make Sure SMART 8 is installed!*****
+  ***** Download it here: https://github.com/BenLand100/SMART*****
+  **If SMART8 is not installed, just remove the '8' in the define smart section above**
+
+     Instructions:
+     1. Stand At Ivy Branches at Castle Wars.
+     2. Make sure hatchet is equiped or in first Inv. Slot.
+     3. Fill out DeclarePlayers.
+     4. Press Start
+     5. Let It Run.
+     6. Remember to check it after a while to make sure everything is ok.
+
+     **Recomended that you choose a less populated world so that the chopping is
+        faster and better!
+
+
+
+      ***Please Report Bugs/Errors/Anything on the Thread***
+
+      **Please remember to include if you are using SMART 7 or 8 when you post on the thread**
+      **It would be very useful to know**
+
+      *To Do List:*
+      *- Proggy (Next Update)*
+      *- Find and Pickup Bird's Nests*
+
+
+      *Thanks for Trying the script!*
+
+
+
+
+*******************************************************************************}
+
+var
+  x, y, BeginXP, IvyXP, PixelsMoving, XPGain, XPPerHour, TimeGone: Integer;
+
+
+Procedure DeclarePlayers;    //FILL THIS OUT!
+
+  begin
+    HowManyPlayers := 1;
+    NumberOfPlayers(HowManyPlayers);
+    CurrentPlayer := 0;
+
+    Players[0].Name :='';
+    Players[0].Pass :='';
+    Players[0].Nick :='';
+    Players[0].Pin  := '';
+    Players[0].BoxRewards := ['Xp', 'mote', 'ostume', 'ssence'];
+    Players[0].Member := True;
+    Players[0].Active:=True;
+
+    PixelsMoving:= 185;  //Prefered To Leave At 185
+end;
+
+{*******************************************************************************
+
+No Need To Touch ANYTHING beyond this point, unless you know what you are doing.
+
+*******************************************************************************}
+
+procedure AdjustCam;
+begin
+  ClickNorth(SRL_ANGLE_HIGH);
+  if FindObj(x, y, 'vy', 4157527, 10) then
+    begin
+      Writeln('Found Ivy. Starting...');
+      wait(RandomRange(253, 354));
+      exit;
+    end else
+    begin
+      writeln('Did not find Ivy. You are either not a CW, or an error has occured. Please Restart.');
+      Logout;
+      TerminateScript;
+    end;
+end;
+
+
+
+procedure AntiBan;
+
+  begin
+    if(not(LoggedIn))then
+    Exit;
+    FindNormalRandoms;
+
+  case Random(75) of
+
+   0:
+      begin
+        writeLn('Doing AntiBan #0 (Hover on Woodcutting Level)');
+        HoverSkill('Woodcutting', false);
+        wait(2453+Random(432));
+        GameTab(Tab_Inv);
+      end;
+
+   1:
+      begin
+        writeLn('Doing Antiban #1 (Picking Up Mouse)');
+        PickUpMouse;
+      end;
+
+   2:
+      begin
+        writeLn('Doing AntiBan #2 (Changing Directions)')
+        MakeCompass('N');
+        wait(100+random(133));
+        MakeCompass('S');
+        wait(50+random(133));
+        MakeCompass('N');
+        FindNormalRandoms;
+      end;
+
+   3:
+      begin
+        writeLn('Doing AntiBan #3 (Moving Mouse)');
+        MMouse(50,100,25,25);
+      end;
+
+    4:
+      begin
+        writeLn('Doing AntiBan #4 (Moving Mouse)');
+        MMouse(81,292,24,24);
+      end;
+
+    5:
+      begin
+        writeLn('Doing AntiBan #5 (Moving Mouse)');
+        MMouse(581,341,25,25);
+      end;
+
+    6:
+      begin
+        writeLn('Doing AntiBan #6 (Moving Mouse)');
+        MMouse(0,0,500,500);
+      end;
+    7:
+      Begin
+        writeLn('Doing AntiBan #7 (Random Right Click)');
+        RandomRClick;
+      End;
+    8:
+      Begin
+        writeLn('Doing AntiBan #8 (Hover Random Skill)');
+        HoverSkill('Random', False);
+        GameTab(Tab_Inv);
+        MakeCompass('N');
+      End;
+    9:
+      Begin
+        writeLn('Doing AntiBan #9 (Bored Human)');
+        BoredHuman;
+        MakeCompass('N');
+      End;
+    10:
+      Begin
+        writeLn('Doing AntiBan #10 (Sleep And Move Mouse)');
+        SleepAndMoveMouse(RandomRange(400,500));
+        MakeCompass('N');
+      End;
+    11:
+      Begin
+        writeLn('Doing AntiBan #11 (Random Right Click)');
+        Wait(RandomRange(250, 1500));
+        RandomRClick;
+      End;
+    12:
+      Begin
+        writeLn('Doing AntiBan #12 (Wait...)');
+        Wait(RandomRange(250, 4000));
+      End;
+    13:
+      begin
+        writeLn('Doing AntiBan #13 (Hover Fishing)');
+        HoverSkill(skill_Fishing,false);
+      end;
+    14:
+      begin
+        writeLn('Doing AntiBan #14 (Checking Friends)');
+        GameTab(Tab_Friends);
+      end;
+    15:
+      begin
+        writeLn('Doing AntiBan #15 (Picking Up Mouse)');
+        PickUpMouse;
+      end;
+
+    16:
+      begin
+        writeLn('Doing AntiBan #16 (Random Compass)');
+        MakeCompass('rand');
+        MakeCompass('N');
+      end;
+
+    17:
+      begin
+        writeLn('Doing AntiBan #17 (Wait...)');
+        Wait(5000+random(2000));
+      end;
+    18:
+      begin
+        writeLn('Doing AntiBan #18 (Stats Tab)');
+        GameTab(Tab_Stats);
+        Wait(400 + Random(8000));
+        GameTab(Tab_Inv);
+      end;
+    19..30:
+      Begin
+        writeLn('Doing AntiBan #19-30 (Bored Human)');
+        BoredHuman;
+        MakeCompass('N');
+      End;
+  end;
+end;
+
+function NotCutting: Boolean;     //Borrowed From Valithor
+
+  var
+    retry: integer;
+    pBox: TBox;
+
+  begin
+    retry := 0;
+    pBox := IntToBox(245, 130, 285, 195);
+    repeat
+      if (AveragePixelShift(pBox, 250, 500) < PixelsMoving) then
+        begin
+          FindNormalRandoms;
+          inc(retry);
+        end else
+          if (AveragePixelShift(pBox, 250, 500) > 160) then
+            begin
+              retry:= 0;
+            end;
+    until (retry = 1);
+    writeln('PixelMovement Low, Fixing! (Not a bad thing)');
+    Result:= true;
+end;
+
+Procedure Proggy;
+  begin
+    TimeGone := (GetTimeRunning/1000);
+    IvyXP := getXP('Woodcutting');
+    XPGain := (IvyXP-BeginXP);
+    XPPerhour :=(3600*(XPGain))/((TimeGone));
+      begin
+        Writeln('******************************************************************************************');
+        Writeln('*/////////---------- StickToTheScript''s Castle Wars Ivy Chopper Version 1.2 ----------\\\\\\\*');
+        Writeln('*/////////----------____________________________________________________----------\\\\\\\*');
+        Writeln('******************************************************************************************');
+        Writeln('- Player: ' + Players[0].Nick + '');
+        Writeln('- Time Running: ' + IntToStr(TimeGone) + ' seconds.');
+        Writeln('- We have gained: ' + IntToStr(XPGain) + ' xp. Which is ' + IntToStr(XPPerHour) + ' xp per hour');
+        Writeln('');
+      end;
+  end;
+
+procedure ChopIvy;
+
+begin
+  if not Loggedin then
+    LoginPlayer;
+
+  FindNormalRandoms;
+
+SetColorToleranceSpeed(2);
+SetColorSpeed2Modifiers(0.03, 0.13)
+
+  if FindObj(x, y, 'vy', 4157527, 10) then
+    begin
+      writeln('Clicking...');
+      clickmouse2(mouse_left);
+      writeln('We have clicked!');
+    end else
+      begin
+        writeln('Did Not Find Ivy. Goodbye.');
+        Logout;
+        TerminateScript;
+      end;
+
+  repeat
+    Wait(RandomRange(150, 248));
+    writeln('Antiban');
+    AntiBan;
+    Proggy;
+  Until NotCutting;
+end;
+
+begin
+  ClearDebug;
+  SRL_SIXHOURFIX := TRUE;
+  SMART_FIXSPEED := TRUE;
+  SetupSRL;
+  DeclarePlayers;
+  LoginPlayer;
+  BeginXP := getXP('Woodcutting');
+  AdjustCam;
+    repeat
+      ChopIvy;
+    until (not loggedIn);
+end.
